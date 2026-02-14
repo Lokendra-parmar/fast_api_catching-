@@ -35,11 +35,22 @@ from fastapi import Request
 @app.post("/")
 async def query_api(request: Request):
     start = time.time()
-    data = await request.json()
+
+    try:
+        data = await request.json()
+    except:
+        data = {}
 
     query = data.get("query", "")
-    if query == "":
-        return {"error": "query field required"}
+
+    if not query:
+        return {
+            "answer": "",
+            "cached": False,
+            "latency": 0,
+            "cacheKey": "",
+            "safe": True
+        }
 
     stats["totalRequests"] += 1
 
@@ -57,15 +68,15 @@ async def query_api(request: Request):
 
         cached = False
 
-    latency = int((time.time() - start)*1000)
+    latency = int((time.time() - start) * 1000)
 
     return {
         "answer": answer,
         "cached": cached,
         "latency": latency,
-        "cacheKey": query
+        "cacheKey": query,
+        "safe": True
     }
-
 
 @app.get("/analytics")
 def analytics():
