@@ -49,7 +49,8 @@ async def query_api(request: Request):
             "cached": False,
             "latency": 0,
             "cacheKey": "",
-            "safe": True
+            "safe": True,
+            "sanitizedOutput": ""
         }
 
     stats["totalRequests"] += 1
@@ -75,8 +76,10 @@ async def query_api(request: Request):
         "cached": cached,
         "latency": latency,
         "cacheKey": query,
-        "safe": True
+        "safe": True,
+        "sanitizedOutput": answer
     }
+
 
 @app.get("/analytics")
 def analytics():
