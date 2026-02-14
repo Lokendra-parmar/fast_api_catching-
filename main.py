@@ -30,10 +30,16 @@ def fake_llm_answer(query):
 def home():
     return {"message": "API is running"}
 
+from fastapi import Request
+
 @app.post("/")
-def query_api(data: dict):
+async def query_api(request: Request):
     start = time.time()
-    query = data["query"]
+    data = await request.json()
+
+    query = data.get("query", "")
+    if query == "":
+        return {"error": "query field required"}
 
     stats["totalRequests"] += 1
 
@@ -59,6 +65,7 @@ def query_api(data: dict):
         "latency": latency,
         "cacheKey": query
     }
+
 
 @app.get("/analytics")
 def analytics():
