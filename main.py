@@ -17,6 +17,10 @@ def fake_llm_answer(query):
     time.sleep(1)   # simulate API delay
     return f"Answer for: {query}"
 
+@app.get("/")
+def home():
+    return {"message": "API is running"}
+
 @app.post("/")
 def query_api(data: dict):
     start = time.time()
